@@ -1,22 +1,27 @@
-select
+SELECT DISTINCT ON (l.lead_id)
     s.visitor_id,
     s.visit_date,
-    s.source as utm_source,
-    s.medium as utm_medium,
-    s.campaign as utm_campaign,
+    s.source AS utm_source,
+    s.medium AS utm_medium,
+    s.campaign AS utm_campaign,
     l.lead_id,
     l.created_at,
     l.amount,
     l.closing_reason,
     l.status_id
-from sessions as s
-left join leads as l
-    on s.visitor_id = l.visitor_id
-where s.medium <> 'organic'
-order by
-    amount desc nulls last,
-    visit_date asc,
-    utm_source asc,
-    utm_medium asc,
-    utm_campaign asc
-limit 10;
+FROM sessions AS s
+LEFT JOIN leads AS l
+    ON s.visitor_id = l.visitor_id
+    AND s.visit_date <= l.created_at
+WHERE s.medium IN (
+    'cpc',
+    'cpm',
+    'cpa',
+    'youtube',
+    'cpp',
+    'tg',
+    'social'
+)
+ORDER BY
+    l.lead_id,
+    s.visit_date DESC;

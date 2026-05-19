@@ -6,7 +6,9 @@ SELECT
 
     COUNT(DISTINCT s.visitor_id) AS visitors_count,
 
-    MAX(vk.daily_spent) + MAX(ya.daily_spent) AS total_cost,
+    COALESCE(MAX(vk.daily_spent), 0)
++
+COALESCE(MAX(ya.daily_spent), 0) AS total_cost,
 
     COUNT(DISTINCT l.lead_id) AS leads_count,
 
@@ -65,5 +67,4 @@ ORDER BY
     utm_source ASC,
     utm_medium ASC,
     utm_campaign ASC
-
-LIMIT 15;
+    limit 15;
